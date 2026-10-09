@@ -129,7 +129,7 @@ def create_trainer(
         logging_steps=config.logging_steps,
         save_steps=config.save_steps,
         eval_steps=config.eval_steps,
-        evaluation_strategy=config.evaluation_strategy,
+        eval_strategy=config.evaluation_strategy,
         save_total_limit=config.save_total_limit,
         
         # Performance

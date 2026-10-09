@@ -35,27 +35,27 @@ FROM base AS development
 COPY requirements.txt .
 
 # Install ML libraries (PyTorch already included in base container)
-RUN pip install transformers>=4.36.0 \
-    datasets>=2.14.0 \
-    accelerate>=0.25.0 \
-    peft>=0.7.0 \
-    bitsandbytes>=0.41.0
+RUN pip install "transformers>=4.57.3" \
+    "datasets>=2.14.0" \
+    "accelerate>=1.15.0" \
+    "peft>=0.7.0" \
+    "bitsandbytes>=0.41.0"
 
 # Install Flash Attention (requires compilation)
 RUN pip install flash-attn --no-build-isolation
 
 # Install remaining requirements (excluding torch since it's already installed)
-RUN pip install pandas>=2.0.0 \
-    numpy>=1.24.0 \
-    scikit-learn>=1.3.0 \
-    tqdm>=4.65.0 \
-    wandb>=0.15.0 \
-    tensorboard>=2.13.0 \
-    psutil>=5.9.0 \
-    GPUtil>=1.4.0 \
-    nltk>=3.8.0 \
-    regex>=2023.0.0 \
-    omegaconf>=2.3.0
+RUN pip install "pandas>=2.0.0" \
+    "numpy>=1.24.0" \
+    "scikit-learn>=1.5.0" \
+    "tqdm>=4.66.3" \
+    "wandb>=0.15.0" \
+    "tensorboard>=2.13.0" \
+    "psutil>=5.9.0" \
+    "GPUtil>=1.4.0" \
+    "nltk>=3.10.3" \
+    "regex>=2023.0.0" \
+    "omegaconf>=2.3.0"
 
 # Install Unsloth for faster training (optional but recommended)
 RUN pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git" || echo "Unsloth installation failed - continuing without it"
@@ -83,19 +83,19 @@ FROM base AS production
 COPY requirements.txt .
 
 # Install production dependencies (PyTorch already included in base container)
-RUN pip install transformers>=4.36.0 \
-    datasets>=2.14.0 \
-    accelerate>=0.25.0 \
-    peft>=0.7.0 \
-    bitsandbytes>=0.41.0 \
-    pandas>=2.0.0 \
-    numpy>=1.24.0 \
-    scikit-learn>=1.3.0 \
-    tqdm>=4.65.0 \
-    psutil>=5.9.0 \
-    nltk>=3.8.0 \
-    regex>=2023.0.0 \
-    omegaconf>=2.3.0
+RUN pip install "transformers>=4.57.3" \
+    "datasets>=2.14.0" \
+    "accelerate>=1.15.0" \
+    "peft>=0.7.0" \
+    "bitsandbytes>=0.41.0" \
+    "pandas>=2.0.0" \
+    "numpy>=1.24.0" \
+    "scikit-learn>=1.5.0" \
+    "tqdm>=4.66.3" \
+    "psutil>=5.9.0" \
+    "nltk>=3.10.3" \
+    "regex>=2023.0.0" \
+    "omegaconf>=2.3.0"
 
 # Install Flash Attention (requires compilation)
 RUN pip install flash-attn --no-build-isolation
