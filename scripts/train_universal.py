@@ -171,7 +171,6 @@ def main():
         cache_dir=cache_dir,
         quantization_config=bnb_config,
         device_map="auto",
-        trust_remote_code=True,
         low_cpu_mem_usage=True,
         torch_dtype=torch.float16
     )
