@@ -13,11 +13,14 @@ services:
     container_name: deepdiscord-training-dev
     restart: unless-stopped
     
+    # Published on loopback only by default; these dev services are not meant to be
+    # reachable from the network. Use an SSH tunnel (scripts/remote_setup.sh) for remote
+    # access, or set BIND_ADDRESS in .env to expose them deliberately.
     ports:
-      - "8888:8888"   # Jupyter Lab
-      - "6006:6006"   # TensorBoard
-      - "8097:8097"   # Visdom (optional)
-      - "8265:8265"   # Ray Dashboard (if using Ray)
+      - "${BIND_ADDRESS:-127.0.0.1}:8888:8888"   # Jupyter Lab
+      - "${BIND_ADDRESS:-127.0.0.1}:6006:6006"   # TensorBoard
+      - "${BIND_ADDRESS:-127.0.0.1}:8097:8097"   # Visdom (optional)
+      - "${BIND_ADDRESS:-127.0.0.1}:8265:8265"   # Ray Dashboard (if using Ray)
     
     volumes:
       # Source code mounting for hot-reload
@@ -53,7 +56,7 @@ services:
       
       # Jupyter configuration
       - JUPYTER_ENABLE_LAB=yes
-      - JUPYTER_TOKEN=deepdiscord-training
+      - JUPYTER_TOKEN=${JUPYTER_TOKEN:?Set JUPYTER_TOKEN in .env to a long random value (see .env.example)}
       - JUPYTER_PORT=8888
       
       # Python development settings
@@ -99,14 +102,14 @@ services:
         echo "Starting development environment..."
         
         # Start Jupyter Lab in background
-        jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --notebook-dir=/app/training_module --NotebookApp.token=deepdiscord-training &
+        jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --notebook-dir=/app/training_module --NotebookApp.token="$$JUPYTER_TOKEN" &
         
         # Start TensorBoard in background
         tensorboard --logdir=/app/training_module/logs --host=0.0.0.0 --port=6006 &
         
         # Keep container running
         echo "Development services started:"
-        echo "- Jupyter Lab: http://localhost:8888 (token: deepdiscord-training)"
+        echo "- Jupyter Lab: http://localhost:8888 (token: JUPYTER_TOKEN from .env)"
         echo "- TensorBoard: http://localhost:6006"
         echo "- Container shell available via: docker exec -it deepdiscord-training-dev bash"
         

@@ -1,0 +1,7 @@
+# Keep secrets and VCS data out of the Docker build context.
+# The development stage of the Dockerfile does `COPY . .`, which would otherwise
+# bake a local .env (tokens, passwords) into the image layers.
+.env
+.env.*
+!.env.example
+.git

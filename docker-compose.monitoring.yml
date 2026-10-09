@@ -1,5 +1,9 @@
 # Advanced monitoring stack for remote training monitoring
 # Includes Grafana, Prometheus, and GPU monitoring
+#
+# All ports are published on loopback only by default (Prometheus, Loki and the
+# exporters have no authentication). Reach them over an SSH tunnel, or set
+# MONITORING_BIND_ADDRESS in .env to expose them deliberately.
 
 version: '3.8'
 
@@ -9,7 +13,7 @@ services:
     image: prom/node-exporter:latest
     container_name: deepdiscord-node-exporter
     ports:
-      - "9100:9100"
+      - "${MONITORING_BIND_ADDRESS:-127.0.0.1}:9100:9100"
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -28,7 +32,7 @@ services:
     image: mindprince/nvidia_gpu_prometheus_exporter:latest
     container_name: deepdiscord-nvidia-exporter
     ports:
-      - "9445:9445"
+      - "${MONITORING_BIND_ADDRESS:-127.0.0.1}:9445:9445"
     deploy:
       resources:
         reservations:
@@ -45,7 +49,7 @@ services:
     image: prom/prometheus:latest
     container_name: deepdiscord-prometheus
     ports:
-      - "9090:9090"
+      - "${MONITORING_BIND_ADDRESS:-127.0.0.1}:9090:9090"
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -65,13 +69,13 @@ services:
     image: grafana/grafana:latest
     container_name: deepdiscord-grafana
     ports:
-      - "3000:3000"
+      - "${MONITORING_BIND_ADDRESS:-127.0.0.1}:3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
       - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
       - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=deepdiscord
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD:?Set GF_SECURITY_ADMIN_PASSWORD in .env to a strong password (see .env.example)}
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
     restart: unless-stopped
@@ -83,7 +87,7 @@ services:
     image: grafana/loki:latest
     container_name: deepdiscord-loki
     ports:
-      - "3100:3100"
+      - "${MONITORING_BIND_ADDRESS:-127.0.0.1}:3100:3100"
     volumes:
       - ./monitoring/loki.yml:/etc/loki/local-config.yaml
       - loki_data:/loki
@@ -110,7 +114,7 @@ services:
     image: python:3.10-slim
     container_name: deepdiscord-gpustat
     ports:
-      - "8080:8080"
+      - "${MONITORING_BIND_ADDRESS:-127.0.0.1}:8080:8080"
     deploy:
       resources:
         reservations:
