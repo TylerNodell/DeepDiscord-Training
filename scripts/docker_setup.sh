@@ -133,7 +133,10 @@ setup_env() {
     
     if [[ ! -f "$env_file" ]]; then
         log_info "Creating environment file..."
-        cat > "$env_file" << EOF
+        # Generate a random Jupyter token instead of shipping a guessable default
+        local jupyter_token
+        jupyter_token=$(head -c 24 /dev/urandom | od -An -tx1 | tr -d ' \n')
+        (umask 077; cat > "$env_file") << EOF
 # DeepDiscord Environment Configuration
 
 # Discord Bot Token (required for bot functionality)
@@ -146,7 +149,7 @@ TOKENIZERS_PARALLELISM=false
 OMP_NUM_THREADS=1
 
 # Jupyter Configuration
-JUPYTER_TOKEN=deepdiscord-training
+JUPYTER_TOKEN=$jupyter_token
 JUPYTER_ENABLE_LAB=yes
 
 # GPU Memory Management
@@ -173,7 +176,7 @@ start_dev() {
     docker-compose --profile development up -d training-dev
     
     log_success "Development environment started"
-    log_info "Jupyter Lab: http://localhost:8888 (token: deepdiscord-training)"
+    log_info "Jupyter Lab: http://localhost:8888 (token: JUPYTER_TOKEN from .env)"
     log_info "TensorBoard: http://localhost:6006"
     
     # Show container status
@@ -259,7 +262,7 @@ Examples:
     $0 shell training-dev                       # Open shell in dev container
 
 Development URLs:
-    Jupyter Lab:  http://localhost:8888 (token: deepdiscord-training)
+    Jupyter Lab:  http://localhost:8888 (token: JUPYTER_TOKEN from .env)
     TensorBoard:  http://localhost:6006
 EOF
 }

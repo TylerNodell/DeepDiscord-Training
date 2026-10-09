@@ -44,11 +44,11 @@ else
 fi
 
 echo "📦 Installing core requirements..."
-pip install transformers>=4.36.0
-pip install datasets>=2.14.0
-pip install accelerate>=0.25.0
-pip install peft>=0.7.0
-pip install bitsandbytes>=0.41.0
+pip install "transformers>=4.57.3"
+pip install "datasets>=2.14.0"
+pip install "accelerate>=1.15.0"
+pip install "peft>=0.7.0"
+pip install "bitsandbytes>=0.41.0"
 
 echo "📦 Installing utilities..."
 pip install tqdm pandas numpy scikit-learn

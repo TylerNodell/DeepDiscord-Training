@@ -219,7 +219,7 @@ create_tunnels() {
     
     log_success "SSH tunnels created"
     log_info "Access services locally:"
-    log_info "  Jupyter Lab:  http://localhost:8888 (token: deepdiscord-training)"
+    log_info "  Jupyter Lab:  http://localhost:8888 (token: JUPYTER_TOKEN from .env on the main machine)"
     log_info "  TensorBoard:  http://localhost:6006"
     log_info "  Grafana:      http://localhost:3000 (if monitoring stack is running)"
 }

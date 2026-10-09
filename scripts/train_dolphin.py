@@ -182,7 +182,7 @@ def train_with_unsloth(model, tokenizer, train_dataset, val_dataset, config: Tra
         logging_steps=config.logging_steps,
         save_steps=config.save_steps,
         eval_steps=config.eval_steps,
-        evaluation_strategy=config.evaluation_strategy,
+        eval_strategy=config.evaluation_strategy,
         save_total_limit=config.save_total_limit,
         load_best_model_at_end=config.load_best_model_at_end,
         

@@ -79,7 +79,6 @@ class SherifBalancedTrainer:
             self.model_name,
             quantization_config=bnb_config,
             device_map="auto",
-            trust_remote_code=True,
             torch_dtype=torch.bfloat16,
         )
         
